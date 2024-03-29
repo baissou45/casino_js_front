@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/socket/toast/toastr.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/blackjack.css">
+</head>
+<body>
+
+    <header class="shadow"></header>
+
+    <main>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3>Jeux du blackjack</h3>
+                <div>
+                    <h5>Mon Solde : <strong class="text-success" id="mon_solde">500</strong> €</h5>
+                    <h5>Mon Paris : <strong class="text-success" id="mon_paris">0</strong> €</h5>
+                </div>
+            </div>
+            <div class="card-body row">
+                <div class="col-4">
+                    Nombre de joueur : <span id="nbr_joueur"></span>
+                </div>
+                <div class="col-4">
+                    Timer : <span id="timer"></span>
+                </div>
+                <div class="col-4">
+                    Evenement : <span id="evenement"></span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div id="black">
+                <img src="/assets/img/blackjack_table.png" class="bg-img">
+                <div class="overlay"></div>
+                <img src="/assets/img/piece.png" class="piece" id="my-piece">
+                <img src="/assets/img/piece.png" class="piece" id="my-piece2">
+                <img src="/assets/img/piece.png" class="piece" id="my-piece3">
+                <img src="/assets/img/piece.png" class="piece" id="my-piece4">
+                <img src="/assets/img/piece.png" class="piece" id="my-piece5">
+
+                <div class="croupier_cartes">
+                    <!-- <img src="/assets/img/cards/10-C.png" class="cartes croupier_get_card"> -->
+                </div>
+
+                <div class="mes_cartes">
+                    <!-- <img src="/assets/img/cards/10-C.png" class="cartes joueur_get_carte"> -->
+                </div>
+
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="shadow btn btn-info action-btn" id="action_1" onclick="jouer()">Parier</button>
+                    <button type="button" class="shadow btn btn-primary action-btn mx-1" id="action_2" onclick="demander_carte()">Demander carte</button>
+                    <button type="button" class="shadow btn btn-success action-btn" id="action_3" onclick="fin_partie_click()">Fin de partie</button>
+                </div>
+
+                <div class="scores d-flex flex-column justify-content-evenly">
+                    <h5 class="d-flex justify-content-between px-2">Vous : <strong class="text-success" id="victoire">0</strong></h5>
+                    <h5 class="d-flex justify-content-between px-2">Croupier : <strong class="text-danger" id="defaite">0</strong></h5>
+                </div>
+
+                <div id="message_zone"></div>
+
+            </div>
+        </div>
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/socket/toast/toastr.min.js"></script>
+    <script src="/assets/js/cartes.js"></script>
+    <!--<script src="/socket/socket.js"></script>
+    <script src="/socket/script.js"></script> -->
+
+    <script src="/assets/js/blackjack.js"></script>
+</body>
+</html>
