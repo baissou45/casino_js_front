@@ -39,9 +39,8 @@
                             </p>
 
                             <div class="col-4 d-flex flex-column align-items-center pt-4">
-                                <button class="btn btn-secondary my-btn">Nombre max de joueurs par partie : 10 </button>
                                 <button class="btn btn-primary mt-2 my-btn" id="blackjack_rules">Règles du jeux</button>
-                                <button class="btn btn-success mt-2 my-btn">Rejoindre une partie </button>
+                                <a onclick="playgame('blackjack')" class="btn btn-success mt-2 my-btn">Rejoindre une partie </a>
                             </div>
                         </div>
 
@@ -50,23 +49,169 @@
             </div>
 
             <div class="card mt-5">
-                <div class="card-body">
-                    <h5 class="card-title">Title</h5>
-                    <p class="card-text">Content</p>
+                <div class="card-body row">
+                    <div class="col-3">
+                        <img src="/assets/img/slot.jpg" width="270px" height="250px" class="rounded">
+                    </div>
+                    <div class="col-9">
+                        <h3 class="card-title fw-bold">slot</h3>
+
+                        <div class="row h-100">
+                            <p class="card-text col-8 d-flex align-items-center h-75">
+                                Découvrez l'excitation et le frisson du casino depuis le confort de votre foyer avec
+                                notre jeu de slot en ligne !
+                                Testez votre chance et alignez les symboles pour déclencher des combinaisons
+                                gagnantes et remporter des récompenses incroyables. Que vous soyez un joueur aguerri ou
+                                un novice, notre jeu de slot
+                                offre une expérience divertissante et palpitante pour tous les amateurs de jeux de
+                                hasard. Prêt à tourner les rouleaux
+                                et à tenter votre chance ? Lancez-vous dès maintenant dans l'aventure des slots en ligne
+                                et laissez-vous emporter par
+                                l'excitation du jeu !
+                            </p>
+
+                            <div class="col-4 d-flex flex-column align-items-center pt-4">
+                                <button class="btn btn-primary mt-2 my-btn" id="slot_rules">Règles du jeux</button>
+                                <button class="btn btn-success mt-2 my-btn"><a href="/slot/indexSlot.html"
+                                        style="text-decoration: none; color: white;">Jouer</a></button>
+                            </div>
+                            <div id="slot_rules_modal" class="modal fade" tabindex="-1" role="dialog"
+                                aria-labelledby="slot_rules_modal-title" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="slot_rules_modal-title">Règles du jeu de Slot
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Le jeu de slot consiste à aligner les symboles sur une ligne de paiement
+                                                pour remporter des gains.
+                                            </p>
+                                            <p>Chaque symbole a une valeur différente, et certaines combinaisons
+                                                spécifiques peuvent déclencher des
+                                                fonctionnalités bonus.</p>
+                                            <p>Le joueur choisit sa mise et lance les rouleaux. Les gains sont
+                                                déterminés en fonction des symboles
+                                                alignés et de la mise initiale.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
             <div class="card mt-5">
-                <div class="card-body">
-                    <h5 class="card-title">Title</h5>
-                    <p class="card-text">Content</p>
+                <div class="card-body row">
+                    <div class="col-3">
+                        <img src="/assets/img/dice-35637_640.webp" width="270px" height="250px" class="rounded">
+                    </div>
+                    <div class="col-9">
+                        <h3 class="card-title fw-bold">Roll 1 Dice</h3>
+
+                        <div class="row h-100">
+                            <p class="card-text col-8 d-flex align-items-center h-75">
+                                Roll 1 Dice est un jeu de dés en ligne qui vous permet de tester votre chance et de
+                                gagner des récompenses incroyables.
+                                Lancez le dé et découvrez si vous avez la chance de remporter le jackpot. Avec des
+                                graphismes de haute qualité et une
+                                jouabilité fluide, Roll 1 Dice offre une expérience de jeu immersive et divertissante
+                                pour tous les amateurs de jeux de
+                                hasard. Prêt à tenter votre chance et à gagner gros ? Lancez-vous dès maintenant dans
+                                l'aventure de Roll 1 Dice et
+                                découvrez le frisson du jeu de dés en ligne !
+                            </p>
+
+                            <div class="col-4 d-flex flex-column align-items-center pt-4">
+                                <button class="btn btn-primary mt-2 my-btn" id="roll1dice_rules">Règles du jeux</button>
+                                <button class="btn btn-success mt-2 my-btn"><a href="/roll_1_dice/index.html"
+                                        style="text-decoration: none; color: white;">Jouer</a></button>
+                            </div>
+                            <div id="roll1dice_rules_modal" class="modal fade" tabindex="-1" role="dialog"
+                                aria-labelledby="roll1dice_rules_modal-title" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="roll1dice_rules_modal-title">Règles du jeu Roll
+                                                1 Dice</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Le jeu Roll 1 Dice consiste à lancer un dé et à parier sur le résultat
+                                                obtenu.</p>
+                                            <p>Si le résultat correspond au pari du joueur, celui-ci remporte un gain.
+                                            </p>
+                                            <p>Le montant du gain dépend de la mise initiale et des probabilités
+                                                associées à chaque résultat
+                                                possible.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
             <div class="card mt-5">
-                <div class="card-body">
-                    <h5 class="card-title">Title</h5>
-                    <p class="card-text">Content</p>
+                <div class="card-body row">
+                    <div class="col-3">
+                        <img src="/assets/img/pngwing.com.png" width="270px" height="250px" class="rounded">
+                    </div>
+                    <div class="col-9">
+                        <h3 class="card-title fw-bold">Roll 2 Dice</h3>
+
+                        <div class="row h-100">
+                            <p class="card-text col-8 d-flex align-items-center h-75">
+                                Roll 2 Dice est un jeu de dés en ligne qui vous permet de tester votre chance et de
+                                gagner des récompenses incroyables.
+                                Lancez les dés et découvrez si vous avez la chance de remporter le jackpot. Avec des
+                                graphismes de haute qualité et une
+                                jouabilité fluide, Roll 2 Dice offre une expérience de jeu immersive et divertissante
+                                pour tous les amateurs de jeux de
+                                hasard. Prêt à tenter votre chance et à gagner gros ? Lancez-vous dès maintenant dans
+                                l'aventure de Roll 2 Dice et
+                                découvrez le frisson du jeu de dés en ligne !
+
+                            <div class="col-4 d-flex flex-column align-items-center pt-4">
+                                <button class="btn btn-primary mt-2 my-btn" id="roll2dice_rules">Règles du jeux</button>
+                                <button class="btn btn-success mt-2 my-btn"><a href="/roll_2_dice/index.html"
+                                        style="text-decoration: none; color: white;">Jouer</a></button>
+                            </div>
+                            <div id="roll2dice_rules_modal" class="modal fade" tabindex="-1" role="dialog"
+                                aria-labelledby="roll2dice_rules_modal-title" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="roll2dice_rules_modal-title">Règles du jeu Roll
+                                                2 Dice</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Le jeu Roll 2 Dice est similaire au jeu Roll 1 Dice, mais avec deux dés.
+                                            </p>
+                                            <p>Le joueur lance deux dés et parie sur la somme des résultats obtenus.</p>
+                                            <p>Les gains sont déterminés en fonction de la mise initiale et des
+                                                probabilités associées à chaque
+                                                somme possible.</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </section>
@@ -87,6 +232,24 @@
 
         // Charger les modals
         $('#blackjack_rules_modal').load('modals/blackjack_rules.html')
+
+        const playgame = (game) => {
+            if(!localStorage.getItem('auth_user')) {
+                window.location.href = '/login.html'
+            } else if(game == "blackjack") {
+                window.location.href = '/blackjack/index.html';
+            }
+        }
+
+        $('#slot_rules').click(() => {
+            $('#slot_rules_modal').modal('show');
+        })
+        $('#roll1dice_rules').click(() => {
+            $('#roll1dice_rules_modal').modal('show');
+        })
+        $('#roll2dice_rules').click(() => {
+            $('#roll2dice_rules_modal').modal('show');
+        })
     </script>
 </body>
 </html>

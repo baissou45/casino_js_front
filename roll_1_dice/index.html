@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de Pari de Dé - Casino</title>
+    <!-- Liens vers Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2a2a2a; /* Couleur de fond sombre */
+            color: #ffffff; /* Couleur du texte clair */
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #ffc107; /* Jaune vif pour le titre */
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Ombre légère sur le texte */
+            text-align: center;
+        }
+
+        .container {
+            background-color: #423f3f; /* Couleur de fond du conteneur */
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Légère ombre pour le conteneur */
+        }
+
+        #deContainer {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #deImage {
+            max-width: 200px; /* Taille du dé */
+            opacity: 1; /* Opacité initiale à 1 */
+            transition: opacity 0.5s ease; /* Transition fluide de l'opacité */
+        }
+
+        .form-control {
+            background-color: #555555; /* Couleur de fond des champs de saisie */
+            color: #ffffff; /* Couleur du texte clair */
+            border-color: #757575; /* Couleur de la bordure */
+        }
+
+        label {
+            color: #ffc107; /* Jaune vif pour les étiquettes */
+        }
+
+        button {
+            background-color: #ffc107; /* Jaune vif pour les boutons */
+            border-color: #ffc107; /* Couleur de la bordure identique au fond */
+            color: #2a2a2a; /* Texte sombre pour contraste */
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ffca28; /* Effet de survol avec une teinte légèrement plus claire */
+        }
+
+        .message {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .message-gagne {
+            color: #4caf50; /* Vert vif pour le message de victoire */
+        }
+
+        .message-perdu {
+            color: #f44336; /* Rouge vif pour le message de défaite */
+        }
+
+        /* Styles pour les accordéons */
+        .card {
+            background-color: #555555; /* Fond sombre pour les cartes */
+            border-color: #757575; /* Bordure des cartes */
+            margin-bottom: 10px;
+        }
+
+        .card-header {
+            background-color: #333333; /* Fond sombre pour les en-têtes de carte */
+            border-color: #757575; /* Bordure des en-têtes de carte */
+        }
+
+        .card-body {
+            color: #ffffff; /* Texte clair dans le corps des cartes */
+            background-color: #333333; /* Nouvelle couleur de fond pour le contenu des instructions */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Jeu de Pari de Dé - Casino</h1>
+        <div id="deContainer">
+            <img src="/roll_1_dice/dice-1.png" id="deImage" alt="Dé" class="img-fluid">
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <label for="nom">Votre nom :</label>
+                <input type="text" id="nom" class="form-control mb-3" placeholder="Entrez votre nom">
+                <p>Votre solde actuel : <span id="solde">100</span> jetons</p>
+                <label for="mise">Faites votre pari (1-6) :</label>
+                <input type="number" id="mise" class="form-control mb-3" min="1" max="6">
+                <label for="montant">Montant de la mise :</label>
+                <input type="number" id="montant" class="form-control mb-3" min="1">
+                <button id="play-button" class="btn btn-warning btn-block" onclick="preparerLancerDe()">Préparer le lancer</button>
+                <div class="mt-3">
+                    <button id="recommencer-button" class="btn btn-secondary btn-block mb-3" onclick="recommencerJeu()">Recommencer</button>
+                    <div class="accordion" id="instructionsAccordion">
+                        <div class="card">
+                            <div class="card-header bg-dark" id="instructionsHeading">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link text-warning" type="button" data-toggle="collapse" data-target="#instructionsCollapse" aria-expanded="true" aria-controls="instructionsCollapse">
+                                        Instructions du Jeu
+                                    </button>
+                                </h5>
+                            </div>
+                            <div id="instructionsCollapse" class="collapse" aria-labelledby="instructionsHeading" data-parent="#instructionsAccordion">
+                                <div class="card-body">
+                                    Bienvenue dans le Jeu de Pari de Dé - Casino ! Voici comment jouer :
+                                    <ul>
+                                        <li>Entrez votre nom dans le champ prévu.</li>
+                                        <li>Saisissez votre pari (un nombre entre 1 et 6) et le montant de votre mise.</li>
+                                        <li>Cliquez sur "Préparer le lancer" pour lancer le dé.</li>
+                                        <li>Si le résultat du dé correspond à votre pari, vous gagnez le montant misé.</li>
+                                        <li>Si le résultat du dé ne correspond pas à votre pari, vous perdez le montant misé.</li>
+                                        <li>Continuez à jouer et amusez-vous !</li>
+                                        <li>Attention à ne pas jouer plus que ce que vous pouvez vous permettre de perdre...!!!</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p id="resultat" class="mt-3"></p>
+                <p id="messageGagne" class="message message-gagne"></p>
+                <p id="messagePerdu" class="message message-perdu"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liens vers Bootstrap JS et jQuery (requis pour certaines fonctionnalités Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        let solde = 100;
+        let joueurNom = '';
+
+        function preparerLancerDe() {
+            joueurNom = document.getElementById('nom').value.trim();
+            if (joueurNom === "") {
+                alert("Veuillez saisir votre nom avant de jouer.");
+                return;
+            }
+
+            // Masquer le bouton de préparation
+            document.getElementById('play-button').style.display = 'none';
+
+            // Afficher le dé initial (avant le lancer)
+            const imageDe = document.getElementById('deImage');
+            imageDe.style.opacity = '1'; // Afficher l'image du dé
+
+            // Délai avant le lancer réel du dé (pour la transition)
+            setTimeout(() => {
+                lancerDe();
+            }, 1000); // Attendre 1 seconde (1000 millisecondes) avant le lancer réel
+        }
+
+        function lancerDe() {
+            const mise = parseInt(document.getElementById('mise').value);
+            const montantMise = parseInt(document.getElementById('montant').value);
+
+            if (isNaN(mise) || isNaN(montantMise) || mise < 1 || mise > 6 || montantMise <= 0) {
+                alert("Veuillez saisir des valeurs valides pour le pari.");
+                return;
+            }
+
+            const resultat = Math.floor(Math.random() * 6) + 1;
+            document.getElementById('resultat').textContent = `Le dé montre : ${resultat}`;
+
+            const imageDe = document.getElementById('deImage');
+            imageDe.src = `/roll_1_dice/dice-${resultat}.png`; // Choisir l'image correspondant au résultat
+
+            if (resultat === mise) {
+                solde += montantMise;
+                document.getElementById('messageGagne').textContent = `Bravo ${joueurNom} ! Vous avez gagné ${montantMise} jetons.`;
+                document.getElementById('messageGagne').style.display = 'block';
+                document.getElementById('messagePerdu').style.display = 'none';
+            } else {
+                solde -= montantMise;
+                document.getElementById('messagePerdu').textContent = `Dommage ${joueurNom} ! Vous avez perdu ${montantMise} jetons.`;
+                document.getElementById('messagePerdu').style.display = 'block';
+                document.getElementById('messageGagne').style.display = 'none';
+            }
+
+            document.getElementById('solde').textContent = solde;
+
+            if (solde <= 0) {
+                alert("Vous n'avez plus de jetons. Fin du jeu.");
+                solde = 100;
+                document.getElementById('solde').textContent = solde;
+            }
+
+            // Réinitialiser les champs de saisie
+            document.getElementById('mise').value = '';
+            document.getElementById('montant').value = '';
+
+            // Réinitialiser le résultat du dé après 2 secondes
+            setTimeout(() => {
+                document.getElementById('resultat').textContent = '';
+                document.getElementById('messageGagne').style.display = 'none';
+                document.getElementById('messagePerdu').style.display = 'none';
+                // Réafficher le bouton de préparation
+                document.getElementById('play-button').style.display = 'block';
+            }, 2000); // Effacer le résultat après 2 secondes (2000 millisecondes)
+        }
+
+        function recommencerJeu() {
+            // Réinitialiser le résultat du dé
+            document.getElementById('resultat').textContent = '';
+            document.getElementById('messageGagne').style.display = 'none';
+            document.getElementById('messagePerdu').style.display = 'none';
+
+            // Réafficher le bouton de préparation
+            document.getElementById('play-button').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

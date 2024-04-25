@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg container">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
             <img src="/assets/img/logo.png" alt="logo" width="55px">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,34 +9,96 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
 
         <div class="d-md-flex justify-content-end w-100">
-            <!-- <ul class="navbar-nav">
-                <li class="nav-item">
-                  <a class="nav-link text-white active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-white" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-white" href="#">Pricing</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown link
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  </ul>
-                </li>
-            </ul> -->
-
-            <div>
-                <a class="btn btn-primary px-5" href="/login">Login</a>
-                <a class="btn btn-primary px-5" href="/register">Register</a>
+            <div id="checkAuth">
+                <a class="btn btn-primary px-5" href="/login.html">Login</a>
+                <a class="btn btn-primary px-5" href="/register.html">Register</a>
             </div>
         </div>
 
       </div>
     </div>
 </nav>
+
+<div id="recharge_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="text-dark">Recharger mon solde</h3>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label for="montant" class="text-dark">Montant</label>
+          <input id="montant" class="form-control" type="number">
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <input type="submit" value="recharger" class="btn btn-success" onclick="recharger()">
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="/constantes.js"></script>
+<script>
+  localStorage.getItem('auth_user')
+    ? document.querySelector('#checkAuth').innerHTML = `
+      <a class="btn accordion btn-primary px-5" onclick="show_recharge()"> Recharger mon solde </a>
+      <a class="btn accordion btn-primary px-5" href="#"> Solde : ${JSON.parse(localStorage.getItem('auth_user')).user.solde} €</a>
+      <a class="btn accordion btn-primary px-5" href="#" onclick="logout()" > Déconnnexion </a>
+    ` : document.querySelector('#checkAuth').innerHTML = `
+      <a class="btn btn-primary px-5" href="/login.html">Login</a>
+      <a class="btn btn-primary px-5" href="/register.html">Register</a>
+    `
+
+    const logout = () => {
+      localStorage.removeItem('auth_user');
+      window.location.href = '/login.html';
+    }
+
+    show_recharge = () => {
+      $('#recharge_modal').modal('show');
+    }
+
+    recharger = () => {
+      const montant = document.querySelector('#montant').value;
+      if(montant > 0) {
+          const token = JSON.parse(localStorage.getItem('auth_user')).token
+
+          fetch(`${api_url}/recharge`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                  montant: montant
+              })
+          })
+          .then(response => {
+              if (!response.ok) {
+                  if (response.status == 403) {
+                    window.location = '/login.html';
+                  }
+                  throw new Error('La requête a échoué avec le statut ' + response.status);
+              }
+              return response.json(); // convertit la réponse en JSON
+          })
+          .then(async data => {
+              alert(data.message);
+
+              localStorage.setItem('auth_user', JSON.stringify(data.data));
+              window.location.reload();
+          })
+          .catch(error => {
+              console.error(error);
+              alert('Une erreur s\'est produite: ' + error.message);
+          });
+      } else {
+          alert('Veuillez saisir un montant supérieur à 0');
+      }
+    }
+</script>

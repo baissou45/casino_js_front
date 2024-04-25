@@ -1,0 +1,436 @@
+body {
+  font-family: Arial, sans-serif;
+  max-height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /*ajouter l'image dont le chemin relatif est "assets\img\slotBg1.png" en fond d'écran*/
+  background-image: url("/assets/img/slotBg1.png");
+  background-size: cover;
+  background-position: center;
+}
+
+#machine {
+  margin: 0;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  text-align: center;
+  margin: 20px;
+  color: #fff1a4;
+}
+
+#cagnote {
+  position: absolute;
+  top: 15%;
+  left: 38%;
+  margin: 10px;
+  color: #fff1a4;
+  width: 100px;
+  font-size: xx-large;
+  display: flex;
+}
+
+#cagnote label {
+  margin-right: 50px;
+}
+
+#cagnote input {
+  width: 100px;
+  margin-right: 10px;
+  text-align: center;
+  font-size: xx-large;
+  color: #fff1a4;
+  background-color: transparent;
+  border: none;
+}
+
+.bet {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.bet div {
+  margin: 10px;
+}
+
+.bet div input {
+  width: 100px;
+  text-align: center;
+}
+
+#mise {
+  position: absolute;
+  top: 33%;
+  left: 68%;
+  margin: 5px 5px;
+  color: #fff1a4;
+  width: 100px;
+  background-color: black;
+  font-size: x-large;
+  display: flex;
+}
+
+#mise input {
+  width: 80px;
+  text-align: center;
+  font-size: x-large;
+  color: #fff1a4;
+  background-color: transparent;
+  border: none;
+}
+
+#nbrVictoire {
+  position: absolute;
+  top: 49%;
+  left: 68%;
+  margin: 5px 5px;
+  color: #fff1a4;
+  width: 100px;
+  background-color: black;
+  font-size: x-large;
+  display: flex;
+}
+
+#nbrVictoire input {
+  width: 80px;
+  text-align: center;
+  font-size: x-large;
+  color: #fff1a4;
+  background-color: transparent;
+  border: none;
+}
+
+#imgSlot {
+  background-image: url("/assets/img/slotBg2.png");
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  width: 70%;
+  height: 80%;
+  top: 7%;
+  left: 19%;
+  z-index: -1;
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  position: absolute;
+  top: 32%;
+  left: 28%;
+  max-width: 70%;
+  max-height: 90%;
+  border-radius: 10px;
+}
+
+.slots {
+  display: flex;
+  justify-content: center;
+}
+
+.slot::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1),
+    transparent
+  ); /* Dégradé transparent vers noir */
+  z-index: 11; /* Assure que l'ombre est devant les éléments */
+}
+
+.slot::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1),
+    transparent
+  ); /* Dégradé transparent vers noir */
+  z-index: 11; /* Assure que l'ombre est devant les éléments */
+}
+
+.reel {
+  width: 110px;
+  height: 105px;
+  margin: 0 24px;
+  overflow: hidden;
+  background-color: transparent;
+  font-size: 70px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.win {
+  /* Couleur or */
+  animation-name: blink;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes blink {
+  0% {
+    background-color: #fff1a4;
+    border-radius: 50%;
+  }
+
+  50% {
+    background-color: transparent;
+  }
+
+  100% {
+    background-color: #fff1a4;
+    border-radius: 50%;
+  }
+}
+
+#boutonCon {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: goldenrod;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#boutonLancement {
+  position: absolute;
+  font-size: 130px;
+  padding: 55px;
+  top: 23%;
+  left: 79%;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+}
+
+.debug {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Styles pour la boîte modale */
+.modal {
+  display: none;
+  /* Par défaut, la boîte modale est cachée */
+  position: fixed;
+  /* Position fixe par rapport à la fenêtre */
+  z-index: 10;
+  /* Positionne la boîte modale au-dessus de tout */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  /* Permet le défilement lorsque la boîte modale est trop grande */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Fond semi-transparent */
+}
+
+.modal-content {
+  background-color: #fff1a4;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  width: auto;
+  /* Ajuster la largeur à la taille du contenu */
+  max-width: 50%;
+  /* Largeur maximale */
+  font-size: 20px;
+  font-style: oblique;
+  /* Taille de police du message */
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content h2 {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: red;
+}
+
+.modal-content p {
+  text-align: left;
+  font-size: 20px;
+  color: black;
+}
+
+.close-btn {
+  align-self: flex-end;
+  font-size: 20px;
+  font-weight: bold;
+  color: red;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: black;
+  background-color: red;
+}
+
+/* Styles pour la barre de navigation */
+.sidebar-left {
+  height: 100%;
+  width: 300px;
+  display: none;
+  display: block;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  font-size: larger;
+  background-color: #f0f0f0;
+  overflow-x: hidden;
+  padding-top: 0 20px;
+  color: black;
+}
+
+#statistics {
+  text-align: left;
+}
+
+#statistics h2 {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+#statistics p span {
+  font-style: italic;
+  font-weight: bold;
+}
+
+nav {
+  background-color: transparent;
+  justify-content: center;
+  align-items: center;
+  font-style: bold;
+  margin-top: 10px;
+  padding: 10px;
+  top: 25%;
+  left: 5%;
+  position: absolute;
+  border: 1px solid transparent;
+}
+
+#btnLance {
+  background-color: transparent;
+  justify-content: center;
+  align-items: center;
+  font-style: bold;
+  margin-top: 10px;
+  padding: 10px;
+  top: 85%;
+  left: 45%;
+  position: absolute;
+  border: 1px solid transparent;
+}
+
+nav ul {
+  display: block;
+  list-style-type: none;
+  padding: 7px;
+  margin: 0;
+}
+
+nav ul li,
+#btnLance {
+  background-color: red;
+  color: #fff1a4;
+  margin: 20px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 15px;
+  border: 3px solid #fff1a4;
+  box-shadow: 0 0 10px black;
+}
+
+nav ul li:hover,
+#btnLance:hover {
+  background-color: #fff1a4;
+  transition: background-color 0.6s, color 0.6s;
+  border: 3px solid red;
+  color: black;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #fff1a4;
+}
+
+nav ul li a:hover {
+  color: black;
+}
+
+/* Ajout de CSS pour cacher initialement la machine à sous */
+#slotMachine {
+  display: none;
+}
+
+/* Ajout de CSS pour cacher le formulaire de connexion après authentification */
+#loginForm.hide {
+  display: none;
+}
+
+#loginForm {
+  display: flex;
+  margin-top: 250px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#loginForm input {
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
+  border-radius: 5px;
+  border: 1px solid #000;
+}
+
+#loginForm button {
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: #000;
+  color: #fff;
+}
+
+#loginForm button:hover {
+  background-color: #fff1a4;
+  color: black;
+  border: 3px solid red;
+}
+
+#loginForm label {
+  color: #000;
+  text-align: center;
+}

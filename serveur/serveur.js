@@ -1,42 +1,32 @@
-const express = require('express')();
-const server = require('http').createServer(express);
+const express = require('express');
+const app = express();
+const server = require('http').createServer(app);
+const socket_logic = require('./sockets/sockets.js');
+const db = require('./db/db.js');
+const blackjackApi = require('./blackjack_api.js');
+const authApi = require('./auth_api.js');
+const cors = require('cors');
 const io = require("socket.io")(server,  {
     cors: { origin: "*" }
 })
 
-users = {};
+app.use(express.json());
 
-io.on('connection', socket => {
-    user_id = socket.id;
-    console.log("User " + user_id + " connected");
+socket_logic(io);
 
-    socket.on('notif_to_group', (snapshot) => {
-        socket.to(snapshot['group']).emit('notif-receved', snapshot['message'])
+app.use(cors());
+app.use('/', authApi);
+app.use('/blackjack', blackjackApi);
+
+
+db.con.connect((err) => {
+    if (err) {
+        console.log(err);
+        throw err
+    };
+
+    console.log(`Connexion a la base données etavlie avec success`);
+    server.listen(3000, () => {
+        console.log(`Le serveur est sur le port 3000`);
     });
-
-    socket.on('join', (snapshot) => {
-        console.log(snapshot);
-
-        socket.join(snapshot['group']);
-        socket.to(snapshot['group']).emit('nouveau_joueur', snapshot['nom'] + ' a join la partie');
-    })
-
-    socket.on('leave', (room) => {
-        socket.leave(room);
-    })
-
-    socket.on('disconnecting', () => {
-        socket.rooms.forEach(room => {
-            socket.to(room).emit('notif-receved', socket.id + ' a quitter le groupe');
-            socket.leave(room);
-        });
-    })
-
-    socket.on('disconnect', () => {
-        console.log(socket.rooms);
-    })
-})
-
-server.listen("3000", () => {
-    console.log("serveur runing");
-})
+});

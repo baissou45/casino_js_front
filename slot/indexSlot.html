@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/slot.css" />
+    <title>Machine à sous</title>
+
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li onclick="openHelpModal()">Comment jouer?</li>
+            <li onclick="openRulesModal()">Gains possibles</li>
+            <li onclick="logout()"><a href="/index.html">Quitter</a></li>
+        </ul>
+    </nav>
+
+    <!-- Interface pour la machine à sous -->
+    <div id="machine">
+        <div id="imgSlot"></div>
+        <!-- Formulaire de connexion -->
+        <div id="loginForm" class="hide">
+            <label for="username">Pseudo </label>
+            <input type="text" id="username" placeholder="Entrez votre pseudo">
+            <button id="boutonCon" onclick="authenticateUser()">Se connecter</button>
+            <!-- Ajout d'un élément pour afficher les erreurs -->
+            <p id="errorMessage" style="color: red;"></p>
+        </div>
+
+        <!-- Interface de la machine à sous -->
+        <div id="slotMachine" style="display: none;">
+            <h1 class="title">MACHINE A SOUS</h1>
+
+            <div class="bet">
+                <div id="cagnote">
+                    <label for="balance">Cagnotte: </label>
+                    <input type="text" id="balance" value="1000" readonly>
+                    <span> €</span>
+                </div>
+                <div id="mise">
+                    <input type="text" id="bet" value="0">
+                    <span> €</span>
+                </div>
+                <div id="nbrVictoire">
+                    <input type="text" id="nbrWin" value="0" readonly>
+                </div>
+            </div>
+
+            <div class="slot">
+                <div class="slots" id="slots1">
+                    <span class="reel" id="reel1">🍒</span>
+                    <span class="reel" id="reel2">🍋</span>
+                    <span class="reel" id="reel3">🍊</span>
+                </div>
+                <div class="slots" id="slots2">
+                    <span class="reel" id="reel4">🔔</span>
+                    <span class="reel" id="reel5">🍉</span>
+                    <span class="reel" id="reel6">🍇</span>
+                </div>
+                <div class="slots" id="slots3">
+                    <span class="reel" id="reel7">🔔</span>
+                    <span class="reel" id="reel8">💰</span>
+                    <span class="reel" id="reel9">7️⃣</span>
+                </div>
+            </div>
+
+            <div id="imgSlot"></div>
+
+            <div>
+                <button id="boutonLancement" type="button" onclick="startSlotMachine()"></button>
+            </div>
+
+            <div>
+                <button id="btnLance" type="button" onclick="startSlotMachine()">Lancer la machine</button>
+            </div>
+
+            <!-- Boîte modale pour afficher les règles -->
+            <div id="rules" class="modal">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeRulesModal()">&times;</button>
+                    <h2>Gains possible</h2>
+                    <p>Voici les gains possibles pour chaque symbole:</p>
+                    <ul style="list-style-type: none; text-align: justify;">
+                        <li>🍒: 7x la mise</li>
+                        <li>🍋: 7x la mise</li>
+                        <li>🍊: 7x la mise</li>
+                        <li>🍉: 15x la mise</li>
+                        <li>🍇: 15x la mise</li>
+                        <li>🔔: 40x la mise</li>
+                        <li>💰: 20x la mise</li>
+                        <li>7️⃣: 60x la mise</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="help" class="modal">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeHelpModal()">&times;</button>
+                    <h2>Comment jouer</h2>
+                    <ul>
+                        <li>Entrez votre pseudo dans le champ prévu à cet effet</li>
+                        <li>Appuyez sur le bouton "Se connecter" pour accéder à la machine à sous</li>
+                        <li>Entrez la mise souhaitée en prenant le soin d'entrer un montant valide</li>
+                        <li>Appuyez sur le bouton "Lancer" ou sur le bouton rouge à droite de la machine pour lancer un
+                            tour</li>
+                        <li>Alignez 3 symboles identiques sur une ligne horizontale ou diagonale pour gagner</li>
+                        <li>Les gains sont calculés en fonction de la mise et du nombre de combinaisons alignée</li>
+                        <li>Les gains sont ajoutés à la cagnotte si vous gagnez et les pertes sont déduites de la
+                            cagnotte
+                            si vous perdez</li>
+                        <li>La cagnotte est affichée sur la machine et vous pouvez voir le nombre de tours gagnés</li>
+                        <li>Relancez la machine si vous souhaitez continuer</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Boîte modale pour afficher les messages -->
+            <div id="messageModal" class="modal">
+                <div class="modal-content">
+                    <h2 id="messageText"></h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="sidebar-left">
+            <div id="statistics" class="debug"></div>
+        </div>
+
+        <div class="sidebar-left">
+            <h2>Historique</h2>
+            <div id="history" class="debug"></div>
+        </div> -->
+    </div>
+
+    <script>
+        // Fonction pour vérifier si l'utilisateur est déjà authentifié
+        function checkAuthentication() {
+            const username = getCookie('username');
+            if (username) {
+                // Utilisateur déjà authentifié, afficher la machine à sous
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('slotMachine').style.display = 'block';
+
+                // Cacher les autres div de #machine
+                const machineDivs = document.querySelectorAll('#machine > div');
+                machineDivs.forEach(div => {
+                    if (div.id !== 'slotMachine') {
+                        div.style.display = 'none';
+                    }
+                });
+                // Afficher la barre de navigation
+                showNavbar();
+            } else {
+                // Utilisateur non authentifié, afficher le formulaire de connexion
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('slotMachine').style.display = 'none';
+                const machineDivs = document.querySelectorAll('#machine > div');
+                machineDivs.forEach(div => {
+                    if (div.id !== 'loginForm') {
+                        div.style.display = 'none';
+                    }
+                });
+                hideNavbar();
+            }
+
+        }
+
+        // Fonction pour authentifier l'utilisateur
+        function authenticateUser() {
+            const username = document.getElementById('username').value;
+
+            if (username.trim() !== '') {
+                // Initialiser les données utilisateur
+                const user = {
+                    username: username,
+                    balance: 1000, // Initialiser la cagnotte à 1000€ (ou la valeur souhaitée)
+                    betHistory: [] // Initialiser l'historique des paris à vide
+                };
+
+                // Stocker les données utilisateur dans le cookie
+                setCookie('user', JSON.stringify(user), 1); // Cookie expirant dans 1 jour
+
+                // Masquer le formulaire de connexion et afficher la machine à sous
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('slotMachine').style.display = 'block';
+                showNavbar();
+                welcomeUser();
+            } else {
+                // Afficher un message d'erreur si le champ est vide
+                document.getElementById('errorMessage').innerText = "Veuillez entrer un pseudo valide.";
+            }
+        }
+
+        // Appel à la fonction de vérification de l'authentification lors du chargement de la page
+        window.onload = checkAuthentication;
+
+
+        // Appel à la fonction de vérification de l'authentification lors du rechargement de la page
+        window.onpageshow = checkAuthentication;
+
+        function logout() {
+            // Supprimer tous les cookies
+            document.cookie.split(";").forEach(function (c) {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+
+        }
+
+        // Fonction pour masquer la barre de navigation
+        function hideNavbar() {
+            const navbar = document.querySelector('nav');
+            navbar.style.display = 'none';
+        }
+
+        // Fonction pour afficher la barre de navigation
+        function showNavbar() {
+            const navbar = document.querySelector('nav');
+            navbar.style.display = 'flex';
+        }
+
+        // Variables globales
+        const symbols = ['🍒', '🍋', '🍊', '🍉', '🍇', '🔔', '💰', '7️⃣'];
+        const paytable = {
+            '7️⃣': 60,
+            '🔔': 40,
+            '💰': 20,
+            '🍉': 15,
+            '🍇': 15,
+            '🍊': 7,
+            '🍋': 7,
+            '🍒': 7
+        };
+
+        // Fonction pour démarrer la machine à sous
+        function startSlotMachine() {
+            const bet = parseInt(document.getElementById('bet').value);
+            let balance = parseInt(document.getElementById('balance').value);
+
+            if (bet > balance) {
+                showMessage("Vous n'avez pas assez d'argent pour cette mise.");
+                return;
+            }
+
+            if (bet > 500 || bet < 10) {
+                showMessage("La mise doit être compris entre 10 et 500.");
+                return;
+            }
+
+            //si la mise saisie n'est pas un nombre renvoyer un message
+            if (isNaN(bet)) {
+                showMessage("Veuillez entrer un montant valide.");
+                return;
+            }
+
+            // Soustraire la mise de la cagnotte
+            balance -= bet;
+            document.getElementById('balance').value = balance;
+
+            // Démarrer l'animation pour chaque symbole
+            document.querySelectorAll('.reel').forEach((reel, index) => {
+                const delay = index % 3 * 800; // Décalage de 0,8s pour chaque ensemble de 3 rouleaux
+                setTimeout(() => {
+                    reel.style.animationName = 'moveDown';
+                    reel.style.animationDuration = '2s';
+                    reel.style.animationTimingFunction = 'ease-in-out';
+                    reel.style.animationIterationCount = 'infinite';
+                    reel.style.animationDirection = 'alternate';
+                }, delay);
+            });
+
+            // Démarrer la rotation de tous les symboles
+            const intervalIds = [];
+            document.querySelectorAll('.reel').forEach((reel, index) => {
+                const delay = index % 3 * 800; // Décalage de 0,8s pour chaque ensemble de 3 rouleaux
+                const intervalId = setInterval(() => {
+                    const randomIndex = Math.floor(Math.random() * symbols.length);
+                    reel.innerText = symbols[randomIndex];
+                }, 100); // Changer le symbole toutes les 100ms
+                setTimeout(() => clearInterval(intervalId), 2000 + delay); // Arrêter après 2 secondes + décalage
+                intervalIds.push(intervalId);
+            });
+
+            // Générer les symboles finaux et vérifier les gains
+            setTimeout(() => {
+                const reels = document.querySelectorAll('.reel');
+                const finalSymbols = Array.from(reels).map(reel => reel.innerText);
+                const win = checkWin(finalSymbols, bet);
+                updateUserData(bet, win); // Mettre à jour les données utilisateur après chaque lancer
+
+            }, 5000); // Attendre 5 secondes pour s'assurer que les rouleaux sont arrêtés
+        }
+
+        // Fonction pour fermer le modal des règles
+        function closeRulesModal() {
+            const rulesModal = document.getElementById('rules');
+            rulesModal.style.display = 'none';
+        }
+
+        // Fonction pour ouvrir le modal des règles
+        function openRulesModal() {
+            const rulesModal = document.getElementById('rules');
+            rulesModal.style.display = 'block';
+        }
+
+        //Fonction pour ouvrir le modal "comment jouer"
+        function openHelpModal() {
+            const helpModal = document.getElementById('help');
+            helpModal.style.display = 'block';
+        }
+
+        // Fonction pour fermer le modal "comment jouer"
+        function closeHelpModal() {
+            const helpModal = document.getElementById('help');
+            helpModal.style.display = 'none';
+        }
+
+        // Fonction pour vérifier les gains
+        function checkWin(reels, bet) {
+            const lines = [
+                // Lignes horizontales
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                // Lignes diagonales
+                [0, 4, 8],
+                [2, 4, 6]
+            ];
+
+            let totalWin = 0;
+
+            // Parcourir chaque ligne pour vérifier les gains
+            lines.forEach(line => {
+                const symbolsOnLine = line.map(index => reels[index]);
+                const uniqueSymbols = [...new Set(symbolsOnLine)];
+
+                if (uniqueSymbols.length === 1 && uniqueSymbols[0] !== ' ') {
+                    const symbol = uniqueSymbols[0];
+                    totalWin += paytable[symbol] * bet;
+
+                    // Appliquer la classe "win" aux cases gagnantes
+                    line.forEach(index => {
+                        const reel = document.getElementById(`reel${index + 1}`);
+                        reel.style.animationName = ''; // Arrêter l'animation avant d'ajouter la classe
+                        reel.classList.add('win');
+                    });
+                }
+            });
+
+            if (totalWin > 0) {
+                let balance = parseInt(document.getElementById('balance').value);
+                let nbrVictoire = parseInt(document.getElementById('nbrWin').value);
+
+                balance += totalWin;
+                document.getElementById('balance').value = balance;
+                nbrVictoire++;
+                document.getElementById('nbrWin').value = nbrVictoire;
+                showMessage(`🤑 Vous avez gagné ${totalWin}€ !`);
+            } else {
+                showMessage(`😥 Vous avez perdu !`);
+            }
+
+            // Mettre à jour les statistiques
+            displayStatistics();
+
+            // Enregistrer le pari dans l'historique
+            const result = reels.map(reel => reel.innerText).join('-');
+            const win = totalWin > 0;
+            updateBetHistory(bet, result, win);
+        }
+
+        //fonction pour souhaiter la bienvenue à l'utilisateur quand il s'authentifie
+        function welcomeUser() {
+            const user = JSON.parse(getCookie('user'));
+            if (user) {
+                showMessage(`Bienvenue ${user.username} !`);
+            }
+        }
+
+        // Fonction pour mettre à jour les données utilisateur après chaque lancer
+        function updateUserData(bet, win) {
+            // Ajouter la fonction getCookie()
+            function getCookie(name) {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        return cookie.substring(name.length + 1);
+                    }
+                }
+                return null;
+            }
+
+            // Ajouter la fonction setCookie()
+            function setCookie(name, value, days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                const expires = "expires=" + date.toUTCString();
+                document.cookie = name + "=" + value + ";" + expires + ";path=/";
+            }
+
+            let user = JSON.parse(getCookie('user'));
+            if (user) {
+                const balance = parseInt(document.getElementById('balance').value);
+                const result = Array.from(document.querySelectorAll('.reel')).map(reel => reel.innerText).join('-');
+
+                // Mettre à jour l'historique des paris
+                const betHistory = user.betHistory || [];
+                betHistory.push({ bet, result, win });
+                user.betHistory = betHistory;
+
+                // Mettre à jour le solde
+                if (win) {
+                    user.balance += bet * (paytable[result.split('-')[0]] || 0);
+                } else {
+                    user.balance -= bet;
+                }
+
+                // Enregistrer les données utilisateur mises à jour dans le cookie
+                setCookie('user', JSON.stringify(user), 1);
+
+                // Rafraîchir l'affichage des statistiques
+                displayStatistics(); // Mettre à jour les statistiques après chaque pari
+            }
+        }
+
+        // Fonction pour afficher les statistiques de l'utilisateur
+        function displayStatistics() {
+            const statisticsDiv = document.getElementById('statistics');
+            statisticsDiv.innerHTML = '<h2>Récapitulatif</h2></br>';
+            const user = JSON.parse(getCookie('user'));
+            if (user) {
+                const betHistory = user.betHistory || [];
+                let wins = 0;
+                let losses = 0;
+                let totalWon = 0;
+                let totalLost = 0;
+                let totalSpent = 0;
+
+                // Calculs des statistiques
+                for (const bet of betHistory) {
+                    if (bet.win) {
+                        wins++;
+                        totalWon += bet.bet;
+                    } else {
+                        losses++;
+                        totalLost += bet.bet;
+                    }
+                    totalSpent += bet.bet;
+                }
+
+                const totalGames = betHistory.length;
+                const balance = user.balance;
+
+                statisticsDiv.innerHTML += `<p><span> > Joueur: </span> ${user.username}</p></br>`;
+                statisticsDiv.innerHTML += `<p><span> > Victoires: </span> ${wins}</p>`;
+                statisticsDiv.innerHTML += `<p><span> > Défaites: </span> ${losses}</p>`;
+                statisticsDiv.innerHTML += `<p><span> > Nombre total de jeux: </span> ${totalGames}</p></br>`;
+                statisticsDiv.innerHTML += `<p><span> > Gains: </span> ${totalWon}€</p>`;
+                statisticsDiv.innerHTML += `<p><span> > Pertes: </span> ${totalLost}€</p>`;
+                statisticsDiv.innerHTML += `<p><span> > Montant total: </span> ${totalSpent}€</p></br>`;
+                statisticsDiv.innerHTML += `<p><span> > Solde actuel: </span> ${balance}€</p>`;
+            } else {
+                statisticsDiv.innerHTML = '<p>Aucune statistique disponible.</p>';
+            }
+        }
+
+
+
+        // Fonction pour afficher les messages dans le modal
+        function showMessage(message) {
+            const messageText = document.getElementById('messageText');
+            messageText.innerText = message;
+            const messageModal = document.getElementById('messageModal');
+            messageModal.style.display = 'block';
+            setTimeout(() => {
+                messageModal.style.display = 'none';
+            }, 3000); // Cacher le modal après 3 secondes
+        }
+
+        // Fonction pour obtenir la valeur d'un cookie
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [cookieName, cookieValue] = cookie.split('=');
+                if (cookieName.trim() === name) {
+                    return cookieValue;
+                }
+            }
+            return null;
+        }
+
+        // Fonction pour définir la valeur d'un cookie
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        // Fonction pour mettre à jour l'historique des paris
+        function updateBetHistory(bet, result, win) {
+            const user = JSON.parse(getCookie('user'));
+            if (user) {
+                const betHistory = user.betHistory || [];
+                betHistory.push({ bet, result, win });
+                setCookie('user', JSON.stringify({ ...user, betHistory }), 1);
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

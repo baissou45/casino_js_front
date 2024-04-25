@@ -36,9 +36,13 @@ socket.on('notif-receved', (message) => {
     // beat.play();
 });
 
-socket.on('nouveau_joueur', (message) => {
-    toastr.info(message, 'Nouveau joueur')
-});
+// socket.on('nouveau_joueur', (message) => {
+//     toastr.info(message["message"], 'Nouveau joueur')
+//     //$('#my-piece2').css('opacity', 1);
+//     //$('#my-piece3').css('opacity', 1);
+//     //$('#my-piece4').css('opacity', 1);
+//     //$('#my-piece5').css('opacity', 1);
+// });
 
 socket.on('connect', () => {
     console.log(socket.id);

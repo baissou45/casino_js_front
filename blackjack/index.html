@@ -10,16 +10,14 @@
     <link rel="stylesheet" href="/assets/css/blackjack.css">
 </head>
 <body>
-
     <header class="shadow"></header>
 
     <main>
-
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3>Jeux du blackjack</h3>
                 <div>
-                    <h5>Mon Solde : <strong class="text-success" id="mon_solde">500</strong> €</h5>
+                    <h5>Mon Solde : <strong class="text-success" id="mon_solde"></strong> €</h5>
                     <h5>Mon Paris : <strong class="text-success" id="mon_paris">0</strong> €</h5>
                 </div>
             </div>
@@ -76,9 +74,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/socket/toast/toastr.min.js"></script>
     <script src="/assets/js/cartes.js"></script>
-    <!--<script src="/socket/socket.js"></script>
-    <script src="/socket/script.js"></script> -->
+    <script src="/socket/socket.js"></script>
+    <script src="/socket/script.js"></script>
 
     <script src="/assets/js/blackjack.js"></script>
+    <script>
+        var loading = true;
+        $(document).ready(function() {
+            !localStorage.getItem('auth_user') && (window.location.href = '/login.html');
+        });
+    </script>
 </body>
 </html>

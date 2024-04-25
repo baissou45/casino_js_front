@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de Pari de Dé - Casino</title>
+    <!-- Liens vers Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #222222; /* Fond sombre pour le corps */
+            color: #ffffff; /* Texte clair */
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #ffc107; /* Jaune vif pour le titre */
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Ombre légère sur le texte */
+            text-align: center;
+        }
+
+        .container {
+            background-color: #423f3f; /* Fond du conteneur */
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Légère ombre pour le conteneur */
+        }
+
+        #deContainer {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .dice {
+            max-width: 200px; /* Taille du dé */
+            opacity: 1; /* Opacité initiale à 1 */
+            transition: opacity 0.5s ease; /* Transition fluide de l'opacité */
+        }
+
+        .form-control {
+            background-color: #555555; /* Couleur de fond des champs de saisie */
+            color: #ffffff; /* Couleur du texte clair */
+            border-color: #757575; /* Couleur de la bordure */
+        }
+
+        label {
+            color: #ffc107; /* Jaune vif pour les étiquettes */
+        }
+
+        button {
+            background-color: #ffc107; /* Jaune vif pour les boutons */
+            border-color: #ffc107; /* Couleur de la bordure identique au fond */
+            color: #2a2a2a; /* Texte sombre pour contraste */
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ffca28; /* Effet de survol avec une teinte légèrement plus claire */
+        }
+
+        .message {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .message-gagne {
+            color: #4caf50; /* Vert vif pour le message de victoire */
+        }
+
+        .message-perdu {
+            color: #f44336; /* Rouge vif pour le message de défaite */
+        }
+
+        /* Styles pour les accordéons */
+        .card {
+            background-color: #555555; /* Fond sombre pour les cartes */
+            border-color: #757575; /* Bordure des cartes */
+            margin-bottom: 10px;
+        }
+
+        .card-header {
+            background-color: #333333; /* Fond sombre pour les en-têtes de carte */
+            border-color: #757575; /* Bordure des en-têtes de carte */
+        }
+
+        .card-body {
+            color: #ffffff; /* Texte clair dans le corps des cartes */
+            background-color: #333333; /* Nouvelle couleur de fond pour le contenu des instructions */
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .instruction-text {
+            color: #ffc107; /* Jaune vif pour le texte d'instructions */
+        }
+
+        .accordion {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Jeu de Pari de Dé - Casino</h1>
+        <div id="deContainer">
+            <img src="/roll_2_dice/dice-1.png" id="deImage1" class="dice" alt="Dé" class="img-fluid">
+            <img src="/roll_2_dice/dice-1.png" id="deImage2" class="dice" alt="Dé" class="img-fluid">
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <label for="nom">Votre nom :</label>
+                <input type="text" id="nom" class="form-control mb-3" placeholder="Entrez votre nom">
+                <p>Votre solde actuel : <span id="solde">1000</span> euros</p>
+                <div class="row mb-3">
+                    <div class="col">
+                        <button class="btn btn-warning btn-block" onclick="choisirPari('plus')">Plus de 7</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-warning btn-block" onclick="choisirPari('egal')">Egal à 7</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-warning btn-block" onclick="choisirPari('moins')">Moins de 7</button>
+                    </div>
+                </div>
+                <label for="mise">Votre mise :</label>
+                <div class="input-group mb-3">
+                    <input type="number" id="mise" class="form-control" placeholder="Entrez votre mise">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" onclick="updateMise()">Miser</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button class="btn btn-secondary btn-block" onclick="adjustMise('MIN')">MIN</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-secondary btn-block" onclick="adjustMise('X2')">X2</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-secondary btn-block" onclick="adjustMise('X/2')">X/2</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-secondary btn-block" onclick="adjustMise('MAX')">MAX</button>
+                    </div>
+                </div>
+                <button id="play-button" class="btn btn-warning btn-block mt-3" onclick="preparerLancerDe()">Préparer le lancer</button>
+                <button id="recommencer-button" class="btn btn-secondary btn-block mt-3" onclick="recommencerJeu()">Recommencer</button>
+                <div class="accordion mt-3" id="instructionsAccordion">
+                    <div class="card">
+                        <div class="card-header bg-dark" id="instructionsHeading">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link text-warning" type="button" data-toggle="collapse" data-target="#instructionsCollapse" aria-expanded="true" aria-controls="instructionsCollapse">
+                                    Règles du Jeu
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="instructionsCollapse" class="collapse" aria-labelledby="instructionsHeading" data-parent="#instructionsAccordion">
+                            <div class="card-body">
+                                <p class="instruction-text">
+                                    Choisissez votre pari avant de lancer le dé :
+                                    <ul>
+                                        <li><strong>Plus de 7</strong> : Mise multipliée par 2.3 si correct</li>
+                                        <li><strong>Egal à 7</strong> : Mise multipliée par 5.8 si correct</li>
+                                        <li><strong>Moins de 7</strong> : Mise multipliée par 2.3 si correct</li>
+                                    </ul>
+                                    Mise maximale :500 XOF | Mise minimale : 20 XOF<br>
+                                    Bonne chance !
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p id="resultat" class="message"></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Liens vers Bootstrap JS et jQuery (requis pour certaines fonctionnalités Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        let solde = 1000;
+        let joueurNom = '';
+        let pariChoisi = '';
+        let mise = 0;
+
+        function preparerLancerDe() {
+            joueurNom = document.getElementById('nom').value.trim();
+
+            if (joueurNom === "") {
+                alert("Veuillez saisir votre nom avant de jouer.");
+                return;
+            }
+
+            if (pariChoisi === '') {
+                alert("Veuillez choisir votre pari avant de lancer le dé.");
+                return;
+            }
+
+            if (mise <= 0) {
+                alert("Veuillez saisir une mise valide.");
+                return;
+            }
+
+            // Masquer le bouton de préparation
+            document.getElementById('play-button').style.display = 'none';
+
+            // Lancer le dé après un délai
+            setTimeout(() => {
+                lancerDe();
+            }, 1000); // Attendre 1 seconde avant de lancer le dé
+        }
+
+        function choisirPari(type) {
+            switch (type) {
+                case 'plus':
+                    pariChoisi = 'Plus de 7';
+                    break;
+                case 'egal':
+                    pariChoisi = 'Egal à 7';
+                    break;
+                case 'moins':
+                    pariChoisi = 'Moins de 7';
+                    break;
+                default:
+                    pariChoisi = '';
+                    break;
+            }
+        }
+
+        function updateMise() {
+            mise = parseInt(document.getElementById('mise').value);
+            if (!isNaN(mise) && mise > 0) {
+                document.getElementById('btn-mise').textContent = `Mise : ${mise} euros`;
+            } else {
+                alert("Veuillez saisir une mise valide.");
+            }
+        }
+
+        function adjustMise(type) {
+            switch (type) {
+                case 'MIN':
+                    mise = 20;
+                    break;
+                case 'X2':
+                    mise *= 2;
+                    break;
+                case 'X/2':
+                    mise /= 2;
+                    break;
+                case 'MAX':
+                    mise = 200;
+                    break;
+                default:
+                    break;
+            }
+
+            document.getElementById('mise').value = mise;
+            updateMise(); // Mettre à jour le texte du bouton avec la nouvelle mise
+        }
+
+        function lancerDe() {
+            const resultatDe1 = Math.floor(Math.random() * 6) + 1;
+            const resultatDe2 = Math.floor(Math.random() * 6) + 1;
+            const sommeDes = resultatDe1 + resultatDe2;
+
+            // Afficher les résultats des dés
+            document.getElementById('deImage1').src = `/roll_1_dice/dice-${resultatDe1}.png`;
+            document.getElementById('deImage2').src = `/roll_1_dice/dice-${resultatDe2}.png`;
+
+            let message = '';
+            let gain = 0;
+
+            switch (pariChoisi) {
+                case 'Plus de 7':
+                    if (sommeDes > 7) {
+                        gain = mise * 2.3;
+                        solde += gain;
+                        message = `${joueurNom}, vous avez gagné ${gain} euros. La somme des dés est ${sommeDes}.`;
+                    } else {
+                        solde -= mise;
+                        message = `${joueurNom}, vous avez perdu ${mise} euros. La somme des dés est ${sommeDes}.`;
+                    }
+                    break;
+                case 'Egal à 7':
+                    if (sommeDes === 7) {
+                        gain = mise * 5.8;
+                        solde += gain;
+                        message = `${joueurNom}, vous avez gagné ${gain} euros. La somme des dés est ${sommeDes}.`;
+                    } else {
+                        solde -= mise;
+                        message = `${joueurNom}, vous avez perdu ${mise} euros. La somme des dés est ${sommeDes}.`;
+                    }
+                    break;
+                case 'Moins de 7':
+                    if (sommeDes < 7) {
+                        gain = mise * 2.3;
+                        solde += gain;
+                        message = `${joueurNom}, vous avez gagné ${gain} euros. La somme des dés est ${sommeDes}.`;
+                    } else {
+                        solde -= mise;
+                        message = `${joueurNom}, vous avez perdu ${mise} euros. La somme des dés est ${sommeDes}.`;
+                    }
+                    break;
+                default:
+                    alert("Pari invalide. Veuillez choisir parmi 'Plus de 7', 'Egal à 7' ou 'Moins de 7'.");
+                    break;
+            }
+
+            // Mettre à jour le solde et afficher le message
+            document.getElementById('solde').textContent = solde;
+            document.getElementById('resultat').textContent = message;
+
+            // Vérifier si le solde est épuisé
+            if (solde <= 0) {
+                alert("Votre solde est épuisé. Le jeu sera réinitialisé.");
+                solde = 1000;
+                document.getElementById('solde').textContent = solde;
+            }
+
+            // Réafficher le bouton de préparation après 5 secondes
+            setTimeout(() => {
+                document.getElementById('play-button').style.display = 'block';
+                document.getElementById('resultat').textContent = '';
+            }, 5000); // Afficher le bouton après 5 secondes
+        }
+
+        function recommencerJeu() {
+            solde = 1000;
+            document.getElementById('solde').textContent = solde;
+            document.getElementById('mise').value = '';
+            document.getElementById('btn-mise').textContent = 'Mise';
+            document.getElementById('resultat').textContent = '';
+            document.getElementById('play-button').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
